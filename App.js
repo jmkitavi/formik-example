@@ -6,100 +6,77 @@ import {
   View,
   Text,
   StatusBar,
+  TextInput,
+  Button,
 } from 'react-native'
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen'
+import { Formik } from 'formik'
 
 const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loginContainer}>
+          <Text>Login Screen</Text>
+
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            onSubmit={values => console.log(values)}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <>
+                <TextInput
+                  name="email"
+                  placeholder="Email Address"
+                  style={styles.textInput}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  keyboardType="email-address"
+                />
+
+                <TextInput
+                  name="password"
+                  placeholder="Password"
+                  style={styles.textInput}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  secureTextEntry
+                />
+
+                <Button onPress={handleSubmit} title="LOGIN" />
+              </>
+            )}
+          </Formik>
+        </View>
       </SafeAreaView>
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  loginContainer: {
+    width: '80%',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 10,
+    elevation: 10,
+    backgroundColor: '#e6e6e6'
   },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+  textInput: {
+    height: 40,
+    width: '100%',
+    margin: 10,
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 10,
   },
 })
 
