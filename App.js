@@ -10,6 +10,18 @@ import {
   Button,
 } from 'react-native'
 import { Formik } from 'formik'
+import * as yup from 'yup'
+
+const loginValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter valid email")
+    .required('Email Address is Required'),
+  password: yup
+    .string()
+    .min(8, ({ min }) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+})
 
 const App = () => {
   return (
@@ -20,10 +32,20 @@ const App = () => {
           <Text>Login Screen</Text>
 
           <Formik
+            validateOnMount={true}
+            validationSchema={loginValidationSchema}
             initialValues={{ email: '', password: '' }}
             onSubmit={values => console.log(values)}
           >
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              isValid,
+            }) => (
               <>
                 <TextInput
                   name="email"
@@ -34,6 +56,9 @@ const App = () => {
                   value={values.email}
                   keyboardType="email-address"
                 />
+                {(errors.email && touched.email) &&
+                  <Text style={styles.errorText}>{errors.email}</Text>
+                }
 
                 <TextInput
                   name="password"
@@ -44,8 +69,15 @@ const App = () => {
                   value={values.password}
                   secureTextEntry
                 />
+                {(errors.password && touched.password) &&
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                }
 
-                <Button onPress={handleSubmit} title="LOGIN" />
+                <Button 
+                  onPress={handleSubmit}
+                  title="LOGIN"
+                  disabled={!isValid || values.email === ''}
+                />
               </>
             )}
           </Formik>
@@ -77,6 +109,10 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 10,
+  },
+  errorText: {
+    fontSize: 10,
+    color: 'red',
   },
 })
 
